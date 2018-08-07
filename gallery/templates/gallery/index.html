@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} {% endblock %}
+
+{% block content %}
+
+{% for picture in pictures %}
+	<p>{{ picture.title }}</p>
+{% endfor %}
+
+{% endblock %}

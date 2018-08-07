@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <title>{% block title %} Django Gallery {% endblock %}</title>
+</head>
+
+<body>
+    <!-- NAV BAR -->
+    <nav class="navbar sticky-top justify-content-between my-2 col-md-12">
+        <a href="{# url 'index' #}">Home</a>
+        <a href="{# url 'about' #}">About</a>
+        {% if user.is_authenticated %}
+        <a href="{# url 'create_picture' #}"><b>Add post</b></a>
+        {% endif %}
+    </nav>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            todo
+            <div class="sm">
+                <form method="GET" action="{# url 'search' #}">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" placeholder="Search posts..." name="q">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-success active"><b>{{ user.get_username }}</b> <i class="fas fa-user"></i></button>
+                <a href="{# url 'logout' #}?next={{ request.path | urlencode }}" class="btn btn-warning">Logout <i class="fas fa-sign-out-alt"></i></a>
+            </div>
+            {% else %}
+            <div class="btn-group btn-group-sm" role="group">
+                <a href="{# url 'login' #}?next={{ request.path | urlencode }}" class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></a>
+                <a href="{# url 'signup' #}" class="btn btn-outline-primary">Register <i class="fas fa-user-plus"></i></a>
+            </div>
+            {% endif %}
+        </header>
+
+        <div class="col-md-12">
+            {% block content %} {% endblock %}
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <div id="bottom">
+                <p>Copyright &copy; {% now "Y" %} by Author </p>
+                <p><a href="#">Back to top</a></p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

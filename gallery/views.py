@@ -18,8 +18,12 @@ from django.db.models import Q
 # Create your views here.
 
 class Index(ListView):
-    pass
-
+    model = Picture
+    template_name = 'gallery/index.html'
+    context_object_name = 'pictures'
+    paginate_by = 10
+    ordering = ('-published_date', )
+    
 
 class SignUp(TemplateView):
     pass

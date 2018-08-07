@@ -21,11 +21,11 @@ class Index(ListView):
     pass
 
 
-class SignUp():
+class SignUp(TemplateView):
     pass
 
 
-class About(TemaplateView):
+class About(TemplateView):
     pass
 
 
@@ -45,7 +45,7 @@ class ListCategories(ListView):
     pass
 
 
-class PictureDetails(Detailview):
+class PictureDetails(DetailView):
     pass
 
 

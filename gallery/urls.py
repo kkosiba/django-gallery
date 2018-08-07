@@ -1,6 +1,4 @@
-from django.contrib.auth.views import (
-    login, logout,
-    )
+from django.contrib.auth import login, logout
 from django.urls import path
 
 # for restricting access to post related actions
@@ -41,9 +39,9 @@ urlpatterns = [
 
     path('category/', ListCategories.as_view(), name='all_categories'),
 
-    path('<pk:pk>/', PictureDetails.as_view(), name='single_picture'),
-    path('<pk:pk>/delete/',
+    path('<int:pk>/', PictureDetails.as_view(), name='single_picture'),
+    path('<int:pk>/delete/',
          login_required(PictureDelete.as_view()), name='delete_picture'),
-    path('<pk:pk>/update/',
+    path('<int:pk>/update/',
          login_required(PictureUpdate.as_view()), name='update_picture'),
 ]

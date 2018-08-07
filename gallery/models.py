@@ -1,5 +1,9 @@
 from django.db import models
 
+from django.utils import timezone
+
+from django.contrib.auth.models import User
+
 # Create your models here.
 
 class Category(models.Model):
@@ -16,11 +20,8 @@ class Category(models.Model):
 
 
 class Picture(models.Model):
-	category = models.ManyToManyField(Category, blank=False)
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='posts')
+    category = models.ManyToManyField(Category, blank=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pictures')
     picture = models.ImageField(upload_to='media', default='media/None/no-img.jpg')
     title = models.CharField(max_length=300)
     published_date = models.DateTimeField(default=timezone.now)

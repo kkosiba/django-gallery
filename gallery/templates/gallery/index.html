@@ -4,8 +4,35 @@
 
 {% block content %}
 
+<div class="d-flex flex-wrap">
 {% for picture in pictures %}
-	<p>{{ picture.title }}</p>
+	<div class="card ml-2" style="width: 20rem;">
+		<a href="{% url 'gallery:single_picture' pk=picture.pk %}">
+			<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}" style="height: 12rem;">
+		</a>
+		<div class="card-body">
+			<h5 class="card-title">{{ picture.title }}</h5>
+			<p class="card-text">
+				{{ picture.description }}
+			</p>
+			<p class="card-text">
+				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
+				<br>	
+				<b>Author:</b>&nbsp; {{ picture.author.username }}
+			</p>
+			
+			{% if user.is_authenticated %}
+			<hr>
+            <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-success active"><b>Actions</b></button>
+                    <a href="{% url 'gallery:update_picture' pk=picture.pk %}" class="btn btn-info">Update <i class="fas fa-edit"></i></a>
+                    <a href="{% url 'gallery:delete_picture' pk=picture.pk %}" class="btn btn-danger">Delete <i class="fas fa-trash-alt"></i></a>
+                </div>
+            {% endif %}
+		</div>
+	</div>
+{% empty %}
+	<p>No items to display.</p>
 {% endfor %}
-
+</div>
 {% endblock %}

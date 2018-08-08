@@ -16,52 +16,49 @@
 
 <body>
     <!-- NAV BAR -->
-    <nav class="navbar sticky-top justify-content-between my-2 col-md-12">
-        <a href="{# url 'index' #}">Home</a>
-        <a href="{# url 'about' #}">About</a>
-        {% if user.is_authenticated %}
-        <a href="{# url 'create_picture' #}"><b>Add post</b></a>
-        {% endif %}
-    </nav>
-    <div class="container">
-        <!-- HEADER -->
-        <header>
-            todo
-            <div class="sm">
-                <form method="GET" action="{# url 'search' #}">
+    <nav class="navbar navbar-dark bg-dark sticky-top justify-content-between">
+        <div class="col-md-8 text-left">
+            <div class="row">
+                <a href="{% url 'gallery:index' %}" class="navbar-brand">Django Gallery</a>
+                <a href="{% url 'gallery:about' %}" class="navbar-text pl-3">About</a>
+                <a href="{% url 'gallery:categories' %}" class="navbar-text pl-3">Categories</a>
+                <form method="GET" action="{% url 'gallery:search' %}" class="form-inline pl-3">
                     <div class="input-group input-group-sm">
-                        <input type="text" class="form-control" placeholder="Search posts..." name="q">
+                        <input type="text" class="form-control" placeholder="Search images..." name="q">
                         <div class="input-group-append">
                             <button class="btn btn-outline-primary" type="button"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                 </form>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'gallery:create_picture' %}" class="navbar-text pl-3"><b>Add picture</b></a>
+                {% endif %}
             </div>
-
+        </div>
+        <div class="col-md-4 text-right">
             {% if user.is_authenticated %}
             <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-success active"><b>{{ user.get_username }}</b> <i class="fas fa-user"></i></button>
-                <a href="{# url 'logout' #}?next={{ request.path | urlencode }}" class="btn btn-warning">Logout <i class="fas fa-sign-out-alt"></i></a>
-            </div>
-            {% else %}
-            <div class="btn-group btn-group-sm" role="group">
-                <a href="{# url 'login' #}?next={{ request.path | urlencode }}" class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></a>
-                <a href="{# url 'signup' #}" class="btn btn-outline-primary">Register <i class="fas fa-user-plus"></i></a>
-            </div>
+                    <button type="button" class="btn btn-success active"><b>{{ user.get_username }}</b> <i class="fas fa-user"></i></button>
+                    <a href="{% url 'gallery:logout' %}?next={{ request.path | urlencode }}" class="btn btn-warning">Logout <i class="fas fa-sign-out-alt"></i></a>
+                </div>
+                {% else %}
+                <div class="btn-group btn-group-sm" role="group">
+                    <a href="{% url 'gallery:login' %}?next={{ request.path | urlencode }}" class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></a>
+                    <a href="{# url 'signup' #}" class="btn btn-outline-primary">Register <i class="fas fa-user-plus"></i></a>
+                </div>
             {% endif %}
-        </header>
-
-        <div class="col-md-12">
+        </div>
+    </nav>
+    <div class="container">
+        <div class="col-md-12 py-4">
             {% block content %} {% endblock %}
         </div>
-
-        <!-- FOOTER -->
-        <footer>
-            <div id="bottom">
-                <p>Copyright &copy; {% now "Y" %} by Author </p>
-                <p><a href="#">Back to top</a></p>
-        </div>
+    </div>
+    
+    <footer class="footer bg-dark">
+        <p>Copyright &copy; {% now "Y" %} by Author </p>
+        <p><a href="#">Back to top</a></p>
     </footer>
-</div>
+
 </body>
 </html>

@@ -37,7 +37,7 @@ urlpatterns = [
     path('author/<str:author>/',
          ListPicturesByAuthor.as_view(), name='author'),
 
-    path('category/', ListCategories.as_view(), name='all_categories'),
+    path('category/', ListCategories.as_view(), name='categories'),
 
     path('<int:pk>/', PictureDetails.as_view(), name='single_picture'),
     path('<int:pk>/delete/',

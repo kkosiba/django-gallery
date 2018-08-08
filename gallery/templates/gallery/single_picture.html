@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Picture {{ picture.pk }} {% endblock %}
+
+{% block content %}
+<div class="text-center">
+	<a href="">Previous image</a> | <a href="">Next image</a> | <a href="{% url 'gallery:index' %}">Back to the list</a>
+</div>
+<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
+<div class="text-center">
+	<a href="">Previous image</a> | <a href="">Next image</a> | <a href="{% url 'gallery:index' %}">Back to the list</a>
+</div>
+{% endblock %}

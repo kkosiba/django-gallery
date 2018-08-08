@@ -1,0 +1,18 @@
+body {
+	background: url("/static/bg.jpg");
+	background-repeat: repeat;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+    color: #999999;
+    text-align: center;
+}
+
+.footer p {
+    margin-bottom: 0;
+}

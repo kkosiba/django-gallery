@@ -25,6 +25,7 @@ class Picture(models.Model):
     picture = models.ImageField(upload_to='media', default='media/None/no-img.jpg')
     title = models.CharField(max_length=300)
     published_date = models.DateTimeField(default=timezone.now)
+    description = models.CharField(max_length=500, default='Empty')
 
     class Meta:
         ordering = ('-published_date', )

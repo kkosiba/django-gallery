@@ -21,7 +21,7 @@ class Index(ListView):
     model = Picture
     template_name = 'gallery/index.html'
     context_object_name = 'pictures'
-    paginate_by = 10
+    paginate_by = 50
     ordering = ('-published_date', )
     
 
@@ -30,7 +30,7 @@ class SignUp(TemplateView):
 
 
 class About(TemplateView):
-    pass
+    template_name = 'gallery/about.html'
 
 
 class PictureCreate(CreateView):
@@ -50,7 +50,8 @@ class ListCategories(ListView):
 
 
 class PictureDetails(DetailView):
-    pass
+    model = Picture
+    template_name = 'gallery/single_picture.html'
 
 
 class PictureDelete(DeleteView):

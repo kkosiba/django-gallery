@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} Add or update picture {% endblock %}
+
+{% block content %}
+<div class="card p-4" style="width: 30rem; margin: auto;">
+	<h3>Add or update picture</h3>
+	<hr>
+	<form method="post" enctype="multipart/form-data" action="">
+	    {% csrf_token %}
+	    {{ form.as_p }}
+	    <input type="submit" value="Submit" />
+	</form>
+</div>
+{% endblock %}

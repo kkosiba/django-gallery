@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Search results for '{{request.GET.q}}' {% endblock %}
+
+{% block content %}
+<div class="card p-4" style="margin: auto;">
+{% if request.GET.q %}
+	<h3> Search results for '{{ request.GET.q }}':</h3>
+	<hr>
+	<div>
+		{% for picture in pictures %}
+		<a href="{% url 'gallery:single_picture' pk=picture.pk %}">
+			<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}" style="height: 12rem;">
+		</a>
+		<div class="card-body">
+			<h5 class="card-title">{{ picture.title }}</h5>
+			<p class="card-text">
+				{{ picture.description }}
+			</p>
+			<p class="card-text">
+				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
+				<br>	
+				<b>Author:</b>&nbsp; {{ picture.author.first_name }}
+			</p>
+		</div>
+		{% empty %}
+			<p>No pictures matching search query.</p>
+		{% endfor %}
+	</div>
+{% else %}
+	<h3>Search</h3>
+	<form method="GET" action="{% url 'gallery:search' %}">
+	    <div class="input-group">
+	        <input type="text" class="form-control" placeholder="Type your query here..." name="q">
+	        <div class="input-group-append">
+	            <button class="btn btn-outline-primary" type="button"><i class="fas fa-search"></i></button>
+	        </div>
+	    </div>
+	</form>
+{% endif %}
+</div>
+{% endblock %}

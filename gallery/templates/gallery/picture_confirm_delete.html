@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Are you sure? {% endblock %}
+
+{% block content %}
+<div class="card p-4 text-center" style="margin: auto;">
+	<h3>Do you want to delete this picture?</h3>
+	<hr>
+	<div class="card m-2" style="width: 20rem;">
+		
+		<a href="{% url 'gallery:single_picture' pk=picture.pk %}">
+			<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}" style="height: 12rem;">
+		</a>
+		<div class="card-body">
+			<h5 class="card-title">{{ picture.title }}</h5>
+			<p class="card-text">
+				{{ picture.description }}
+			</p>
+			<p class="card-text">
+				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
+				<br>	
+				<b>Author:</b>&nbsp; {{ picture.author.first_name }}
+			</p>
+		</div>
+		<hr>
+		<form method="post" action="{% url 'gallery:index' %}">
+		    {% csrf_token %}
+		    {{ form.as_p }}
+		    <input type="submit" value="Confirm" />
+		</form>
+	</div>
+</div>
+{% endblock %}

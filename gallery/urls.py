@@ -22,7 +22,7 @@ urlpatterns = [
     path('search/', PictureSearch.as_view(), name='search'),
     path('author/<str:author>/',
          ListPicturesByAuthor.as_view(), name='author'),
-    path('category/', ListCategories.as_view(), name='categories'),
+    path('categories/', ListCategories.as_view(), name='categories'),
     path('<int:pk>/', PictureDetails.as_view(), name='single_picture'),
     path('<int:pk>/delete/', PictureDelete.as_view(), name='delete_picture'),
     path('<int:pk>/update/', PictureUpdate.as_view(), name='update_picture'),

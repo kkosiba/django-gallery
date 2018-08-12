@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} {% endblock %}
+{% block title %} Pictures by {{ author.first_name }} {% endblock %}
 
 {% block content %}
 
@@ -20,15 +20,6 @@
 				<br>	
 				<b>Author:</b>&nbsp; <a href="{% url 'gallery:author' author=picture.author.username %}">{{ picture.author.first_name }}</a>
 			</p>
-			
-			{% if user.is_authenticated %}
-			<hr>
-            <div class="btn-group btn-group-sm" role="group">
-                    <button type="button" class="btn btn-success active"><b>Actions</b></button>
-                    <a href="{% url 'gallery:update_picture' pk=picture.pk %}" class="btn btn-info">Update <i class="fas fa-edit"></i></a>
-                    <a href="{% url 'gallery:delete_picture' pk=picture.pk %}" class="btn btn-danger">Delete <i class="fas fa-trash-alt"></i></a>
-                </div>
-            {% endif %}
 		</div>
 	</div>
 {% empty %}

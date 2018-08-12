@@ -34,8 +34,8 @@
                 {{ form.password }}
             </div>
         </div>
-        <!-- TODO: password reset form -->
         <button class="btn btn-primary" type="Login">Sign In</button>
     </form>
+    <a href="{% url 'password_reset' %}" class="mt-2">Forgot your password?</a>
 </div>
 {% endblock %}

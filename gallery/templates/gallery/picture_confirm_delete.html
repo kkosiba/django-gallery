@@ -19,7 +19,7 @@
 			<p class="card-text">
 				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
 				<br>	
-				<b>Author:</b>&nbsp; {{ picture.author.first_name }}
+				<b>Author:</b>&nbsp; <a href="{% url 'gallery:author' author=picture.author.username %}">{{ picture.author.first_name }}</a>
 			</p>
 		</div>
 		<hr>

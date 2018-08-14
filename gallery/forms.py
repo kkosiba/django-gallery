@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from .models import Picture, Profile
+from .models import Album, Picture, Profile
 
 from django.forms import (
     ModelForm, Textarea, TextInput, 
     EmailInput, SelectMultiple, CharField,
-    PasswordInput,
+    PasswordInput, ClearableFileInput,
     )
 
 from django.core.exceptions import ValidationError
@@ -24,19 +24,21 @@ class ProfileForm(ModelForm):
 class CreatePictureForm(ModelForm):
     class Meta:
         model = Picture
-        fields = '__all__'
+        fields = ('album', 'title', 'picture', 'description', 'tags',)
         widgets = {
             'title': TextInput(
                 attrs={
                     'class': 'form-control',
                     'required': True,
                     'placeholder': 'Type your title here..', }, ),
+            'picture': ClearableFileInput(
+                attrs={'multiple': True}, ),
             'description': Textarea(
                 attrs={
                     'class': 'form-control',
                     'required': True,
-                    'placeholder': 'Type your post here..', }, ),
-            'category': SelectMultiple(
+                    'placeholder': 'Type your description here..', }, ),
+            'album': SelectMultiple(
                 attrs={
                     'class': 'form-control',
                     'required': True, }, ),
@@ -49,6 +51,19 @@ class CreatePictureForm(ModelForm):
             instance.save()
             self.save_m2m()
         return instance
+
+
+class AlbumCreateForm(ModelForm):
+    class Meta:
+        model = Album
+        fields = ('name', )
+        widgets = {
+            'name': TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'required': True,
+                    'placeholder': 'Album\'s name...', }, ),
+        }
 
 
 class SignUpForm(ModelForm):

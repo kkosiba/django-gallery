@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Redirect to '/' after login/logout
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Tags case insensitive
+TAGGIT_CASE_INSENSITIVE = True

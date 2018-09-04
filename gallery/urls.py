@@ -1,17 +1,19 @@
 from django.urls import path
 
-# for restricting access to post related actions
-from django.contrib.auth.decorators import login_required
-
 from .views import (
     Index,
     PictureCreate,
     PictureSearch,
     ListPicturesByAuthor,
-    ListCategories,
+    ListPicturesByAlbum,
+    ListPicturesByTags,
+    ListAlbums,
     PictureDetails,
     PictureDelete,
     PictureUpdate,
+    AlbumCreate,
+    AlbumDelete,
+    AlbumUpdate,
     )
 
 app_name = 'gallery'
@@ -22,7 +24,18 @@ urlpatterns = [
     path('search/', PictureSearch.as_view(), name='search'),
     path('author/<str:author>/',
          ListPicturesByAuthor.as_view(), name='author'),
-    path('categories/', ListCategories.as_view(), name='categories'),
+    path('tags/<str:tag_name>/',
+         ListPicturesByTags.as_view(), name='tag_name'),
+
+    path('albums/', ListAlbums.as_view(), name='albums'),
+    path('albums/add/', AlbumCreate.as_view(), name='create_album'),
+    path('albums/<str:album_name>/',
+        ListPicturesByAlbum.as_view(), name='single_album'),
+    path('albums/<str:album_name>/delete/',
+        AlbumDelete.as_view(), name='delete_album'),
+    path('albums/<str:album_name>/update/',
+        AlbumUpdate.as_view(), name='update_album'),
+
     path('<int:pk>/', PictureDetails.as_view(), name='single_picture'),
     path('<int:pk>/delete/', PictureDelete.as_view(), name='delete_picture'),
     path('<int:pk>/update/', PictureUpdate.as_view(), name='update_picture'),

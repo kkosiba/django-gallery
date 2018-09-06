@@ -1,13 +1,12 @@
 from django.urls import path
 
 from .views import (
-    Index,
     PictureCreate,
     PictureSearch,
-    ListPicturesByAuthor,
-    ListPicturesByAlbum,
-    ListPicturesByTags,
-    ListAlbums,
+    PicturesByAuthor,
+    PicturesByAlbum,
+    PicturesByTags,
+    Albums,
     PictureDetails,
     PictureDelete,
     PictureUpdate,
@@ -19,18 +18,15 @@ from .views import (
 app_name = 'gallery'
 
 urlpatterns = [
-	path('', Index.as_view(), name='index'),
+	path('', Albums.as_view(), name='albums'),
     path('add/', PictureCreate.as_view(), name='create_picture'),
     path('search/', PictureSearch.as_view(), name='search'),
-    path('author/<str:author>/',
-         ListPicturesByAuthor.as_view(), name='author'),
-    path('tags/<str:tag_name>/',
-         ListPicturesByTags.as_view(), name='tag_name'),
+    path('author/<str:author>/', PicturesByAuthor.as_view(), name='author'),
+    path('tags/<str:tag_name>/', PicturesByTags.as_view(), name='tag_name'),
 
-    path('albums/', ListAlbums.as_view(), name='albums'),
     path('albums/add/', AlbumCreate.as_view(), name='create_album'),
     path('albums/<str:album_name>/',
-        ListPicturesByAlbum.as_view(), name='single_album'),
+        PicturesByAlbum.as_view(), name='single_album'),
     path('albums/<str:album_name>/delete/',
         AlbumDelete.as_view(), name='delete_album'),
     path('albums/<str:album_name>/update/',

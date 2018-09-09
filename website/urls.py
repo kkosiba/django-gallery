@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from gallery.views import (
-    About, SignUp, update_profile,
+    SignUp, update_profile,
     )
 
 urlpatterns = [
@@ -31,7 +31,6 @@ urlpatterns = [
     path('accounts/signup/', SignUp.as_view(), name='signup'),
     path('accounts/profile/', update_profile, name='profile'),
 
-    path('about/', About.as_view(), name='about'),
     path('', include('gallery.urls')),
 ]
 

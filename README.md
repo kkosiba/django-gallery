@@ -5,7 +5,6 @@ Features
 --------
 
 1. User authorisation.
-2. Basic user permissions: admin, editor, normal.
 3. Facebook comments
 4. Tags
 5. Search, year/month archives, sort pictures by album or tags.

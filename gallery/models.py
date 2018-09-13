@@ -10,6 +10,8 @@ from django.dispatch import receiver
 # tags
 from taggit.managers import TaggableManager
 
+import random
+
 # Create your models here.
 
 class Profile(models.Model):
@@ -34,15 +36,31 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Album(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    creation_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name_plural = 'Albums'
+        ordering = ('-creation_date', )
+
+    def item_count(self):
+        n = Picture.objects.filter(album__name=self.name).count()
+        if n>1:
+            return f"{n} items."
+        elif n==1:
+            return "1 item."
+        return "Empty album."
+
+    def random_image(self):
+        lst = Picture.objects.filter(album__name=self.name)
+        if lst:
+            return random.choice(lst).picture
+        return None
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('gallery:album', kwargs={'name': self.name})
+        return reverse('gallery:single_album', kwargs={'album_name': self.name})
 
 
 class Picture(models.Model):

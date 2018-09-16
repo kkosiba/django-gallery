@@ -3,7 +3,6 @@ from django.urls import path
 from .views import (
     PictureCreate,
     PictureSearch,
-    PicturesByAuthor,
     PicturesByAlbum,
     PicturesByTags,
     Albums,
@@ -21,7 +20,6 @@ urlpatterns = [
 	path('', Albums.as_view(), name='albums'),
     path('add/', PictureCreate.as_view(), name='create_picture'),
     path('search/', PictureSearch.as_view(), name='search'),
-    path('author/<str:author>/', PicturesByAuthor.as_view(), name='author'),
     path('tags/<str:tag_name>/', PicturesByTags.as_view(), name='tag_name'),
 
     path('albums/add/', AlbumCreate.as_view(), name='create_album'),

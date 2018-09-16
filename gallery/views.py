@@ -31,13 +31,6 @@ from django.db.models import Q
 
 from django.contrib import messages
 # Create your views here.
-
-class Index(ListView):
-    model = Picture
-    template_name = 'gallery/index.html'
-    context_object_name = 'pictures'
-    paginate_by = 10
-    ordering = ('-published_date', )
     
 
 class SignUp(CreateView):
@@ -49,10 +42,6 @@ class SignUp(CreateView):
         if self.request.user.is_authenticated:
             return redirect('/')
         return super().dispatch(*args, **kwargs)
-
-
-class About(TemplateView):
-    template_name = 'gallery/about.html'
 
 
 class PictureCreate(LoginRequiredMixin, CreateView):
@@ -111,30 +100,14 @@ class PictureSearch(ListView):
         return results
 
 
-class ListPicturesByAuthor(ListView):
-    model = Picture
-    context_object_name = 'pictures'
-    template_name = 'gallery/pictures_by_author.html'
-    paginate_by = 50
-    ordering = ('-published_date',)
-
-    def get_queryset(self):
-        author = self.kwargs.get('author', None)
-        results = []
-        if author:
-            results = Picture.objects.filter(author__username=author)
-        return results
-
-
-class ListAlbums(ListView):
+class Albums(ListView):
     model = Album
-    template_name = 'gallery/list_albums.html'
+    template_name = 'gallery/index.html'
     context_object_name = 'albums'
-    paginate_by = 10
+    paginate_by = 12
 
 
-class ListPicturesByAlbum(ListView):
-    model = Picture
+class PicturesByAlbum(ListView):
     context_object_name = 'pictures'
     template_name = 'gallery/pictures_by_album.html'
     paginate_by = 50
@@ -147,8 +120,16 @@ class ListPicturesByAlbum(ListView):
             results = Picture.objects.filter(album__name=album)
         return results
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        album = self.kwargs.get('album_name', None)
+        context['album_name'] = album
+        # to be implemented
+        context['created'] = 0
+        return context
 
-class ListPicturesByTags(ListView):
+
+class PicturesByTags(ListView):
     model = Picture
     context_object_name = 'pictures'
     template_name = 'gallery/pictures_by_tags.html'
@@ -159,18 +140,23 @@ class ListPicturesByTags(ListView):
         tag = self.kwargs.get('tag_name', None)
         results = []
         if tag:
-            results = Picture.objects.filter(
-                tags__name=tag)
+            results = Picture.objects.filter(tags__name=tag)
         return results
 
 class PictureDetails(DetailView):
     model = Picture
     template_name = 'gallery/single_picture.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk', None)
+        # doesn't work
+        context['album_name'] = Picture.objects.filter(pk=pk)[0].album
+        return context
 
 class PictureDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Picture
-    success_url = reverse_lazy('gallery:index')
+    success_url = reverse_lazy('gallery:albums')
 
     def test_func(self):
         """

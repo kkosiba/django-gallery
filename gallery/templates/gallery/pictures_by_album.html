@@ -9,47 +9,34 @@
 <p class="text-white">{{ created|date:"F j, Y" }}</p>
 <hr>
 {% if user.is_authenticated %}
-    <a href="{# url 'gallery:delete_album' album_name= #}" class="navbar-text pl-3"><b>Delete Album</b></a>
+<a href="{# url 'gallery:delete_album' album_name= #}" class="navbar-text pl-3"><b>Delete Album</b></a>
 {% endif %}
-<!-- <div class="d-flex justify-content-center flex-wrap">
-{% for picture in pictures %}
-    <div class="card picture-container ml-2">
-        <img class="card-img" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
-        <div class="card-img-overlay">
-            <a href="{% url 'gallery:single_picture' pk=picture.pk %}">
-                <h4 class="card-title"><b>{{ picture.title }}</b></h4></a> by <a href="{% url 'gallery:author' author=picture.author.username %}"><em>{{ picture.author.first_name }}</em></a>
-        </div>
-    </div>
-{% empty %}
-    <p>No items to display.</p>
-{% endfor %}
-</div> -->
 
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
   <div class="carousel-inner">
     {% for picture in pictures %}
-        {% if forloop.counter == 1 %}
+    {% if forloop.counter == 1 %}
         <div class="carousel-item active">
-        {% else %}
+    {% else %}
         <div class="carousel-item">
-        {% endif %}
-        <figure class="cap-bot">
-            <img class="d-block w-100" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
-          <figcaption>
-            <h5>{{ picture.title }}</h5>
-            <p>{{ picture.description }}</p>
-          </figcaption>
-        </figure>
-        </div>
+    {% endif %}
+            <figure class="cap-bot">
+                <img class="d-block w-100" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
+                <figcaption>
+                    <h5>{{ picture.title }}</h5>
+                    <p>{{ picture.description }}</p>
+                </figcaption>
+            </figure>
     {% endfor %}
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span><i class="fas fa-angle-left fa-5x text-dark" aria-hidden="true"></i></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span><i class="fas fa-angle-right fa-5x text-dark" aria-hidden="true"></i></span>
-    <span class="sr-only">Next</span>
-  </a>
+        </div>
+    
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span><i class="fas fa-angle-left fa-5x text-dark" aria-hidden="true"></i></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span><i class="fas fa-angle-right fa-5x text-dark" aria-hidden="true"></i></span>
+        <span class="sr-only">Next</span>
+    </a>
 </div>
 {% endblock %}

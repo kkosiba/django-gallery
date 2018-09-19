@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import Album, Picture, Profile
+from .models import Album, Picture
 
 from django.forms import (
     ModelForm, Textarea, TextInput, 
@@ -8,17 +8,6 @@ from django.forms import (
     )
 
 from django.core.exceptions import ValidationError
-
-class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email', )
-
-
-class ProfileForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ('avatar', 'bio', )
 
 
 class CreatePictureForm(ModelForm):

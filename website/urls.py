@@ -16,14 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from django.contrib.auth import login, logout
 
 from django.conf.urls.static import static
 from django.conf import settings
 
-from gallery.views import (
-    SignUp, update_profile,
-    )
 
 from gallery.feeds import AlbumFeed
 
@@ -31,8 +27,6 @@ from gallery.feeds import AlbumFeed
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup/', SignUp.as_view(), name='signup'),
-    path('accounts/profile/', update_profile, name='profile'),
 
     path('feed/', AlbumFeed()),
     path('', include('gallery.urls')),

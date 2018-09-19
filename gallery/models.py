@@ -13,27 +13,6 @@ from taggit.managers import TaggableManager
 import random
 
 # Create your models here.
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, 
-        default=None, null=True, related_name='profile')
-    avatar = models.ImageField(
-        upload_to='media/avatars',
-        default='media/avatars/none.jpg',
-        blank=True, )
-    bio = models.TextField(max_length=500, default='', blank=True)
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-
 class Album(models.Model):
     name = models.CharField(max_length=100, unique=True)
     creation_date = models.DateTimeField(default=timezone.now)

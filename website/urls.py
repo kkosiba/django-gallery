@@ -25,12 +25,16 @@ from gallery.views import (
     SignUp, update_profile,
     )
 
+from gallery.feeds import AlbumFeed
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', SignUp.as_view(), name='signup'),
     path('accounts/profile/', update_profile, name='profile'),
 
+    path('feed/', AlbumFeed()),
     path('', include('gallery.urls')),
 ]
 

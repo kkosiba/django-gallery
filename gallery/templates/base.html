@@ -1,4 +1,5 @@
 {% load static %}
+{% get_media_prefix as MEDIA_PREFIX %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,9 +10,10 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- FontAwesome CSS -->
     <link rel="stylesheet" href="{% static 'css/all.css' %}">
-    <!-- Custom CSS & JS -->
+    <!-- Custom CSS & fonts -->
     <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
     <title>{% block title %} Gallery {% endblock %}</title>
 </head>
 
@@ -56,7 +58,13 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'logout' %}?next={{ request.path | urlencode }}">Sign Out <i class="fas fa-sign-out-alt"></i></a>
+                        <span class="nav-link">
+                            Hello, <b>{{ user.username.capitalize }}</b> 
+                            <span class="vertical-line">
+                            <a href="{% url 'logout' %}?next={{ request.path | urlencode }}">&nbsp;Sign Out <i class="fas fa-sign-out-alt"></i></a>
+                            </span>
+                        </span>
+                        
                         {% else %}
                         <a class="nav-link" href="{% url 'login' %}?next={{ request.path | urlencode }}">Sign In <i class="fas fa-sign-in-alt"></i></a>
                         {% endif %}
@@ -65,6 +73,8 @@
             </div>
         </nav>
     </header> 
+
+    {% block user_panel %} {% endblock %}
 
     {% block content %} {% endblock %}
     
@@ -82,8 +92,5 @@
     <!-- Scripts -->
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- Waypoints & infinite scroll-->
-    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/infinite.min.js' %}"></script>
 </body>
 </html>

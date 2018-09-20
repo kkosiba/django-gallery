@@ -1,38 +1,33 @@
 {% extends 'base.html' %}
 
-{% block title %} {% endblock %}
+{% block title %} All albums {% endblock %}
+
+{% block subpage %} All albums {% endblock %}
+
+{% block user_panel %}
+    {% if user.is_authenticated %}
+    <hr>
+    <p class="pl-3">
+        <b>User Panel:&nbsp;</b>
+        <a href="{% url 'gallery:create_album' %}"><b>New Album &nbsp;</b><i class="fas fa-edit"></i></a>
+    </p>
+    <hr>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
-<div class="d-flex justify-content-center flex-wrap">
-{% for picture in pictures %}
-	<div class="card m-2" style="width: 20rem;">
-		<a href="{% url 'gallery:single_picture' pk=picture.pk %}">
-			<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}" style="height: 12rem;">
-		</a>
-		<div class="card-body">
-			<h5 class="card-title">{{ picture.title }}</h5>
-			<p class="card-text">
-				{{ picture.description }}
-			</p>
-			<p class="card-text">
-				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
-				<br>	
-				<b>Author:</b>&nbsp; <a href="{% url 'gallery:author' author=picture.author.username %}">{{ picture.author.first_name }}</a>
-			</p>
-			
-			{% if user.is_authenticated %}
-			<hr>
-            <div class="btn-group btn-group-sm" role="group">
-                    <button type="button" class="btn btn-success active"><b>Actions</b></button>
-                    <a href="{% url 'gallery:update_picture' pk=picture.pk %}" class="btn btn-info">Update <i class="fas fa-edit"></i></a>
-                    <a href="{% url 'gallery:delete_picture' pk=picture.pk %}" class="btn btn-danger">Delete <i class="fas fa-trash-alt"></i></a>
-                </div>
-            {% endif %}
-		</div>
-	</div>
-{% empty %}
-	<p>No items to display.</p>
-{% endfor %}
-</div>
+<!-- Photo Grid -->
+<ul class="photo-grid list-unstyled">
+    {% for album in albums %}
+        <li>
+            <a href="{% url 'gallery:single_album' album_name=album %}">
+                <img src="{% if album.random_image.url %}{{ album.random_image.url }}{% else %}{{ MEDIA_PREFIX }}/media/placeholder.png{% endif %}">
+            </a>
+        </li>
+    {% empty %}
+        <p>No items to display.</p>
+    {% endfor %}
+</ul>
+
 {% endblock %}

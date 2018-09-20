@@ -1,13 +1,13 @@
 # django-gallery
-Django gallery
+Responsive Bootstrap gallery with Django backend
 
 Features
 --------
 
-1. User authorisation.
+1. Authorisation.
 3. Facebook comments
 4. Tags
-5. Search, year/month archives, sort pictures by album or tags.
+5. Search, sort pictures by album or tags.
 
 
 Main requirements
@@ -43,3 +43,8 @@ The project is all set up. Run a local server with
 `python3 manage.py runserver`
 
 The gallery should be available at `localhost:8000`.
+
+
+Credits
+-------
+Sample data for the gallery by courtesy of [Unsplash](https://unsplash.com/)

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Update Picture
+{% endblock %}
+
+{% block subpage %}
+    Update Picture
+{% endblock %}
+
+{% block user_panel %} {% endblock %}
+
+{% block content %}
+<div class="submission-form">
+    <h3 class="my-4">You are updating the following picture:</h3>
+    <img src="{{ picture.picture.url }}" style="width: 200px;">
+    <form method="post" enctype="multipart/form-data" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}

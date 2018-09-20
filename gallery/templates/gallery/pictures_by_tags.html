@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Tag: ... {% endblock %}
+
+{% block content %}
+<h3> Pictures in ... </h3>
+<hr>
+<div class="d-flex justify-content-center flex-wrap">
+{% for picture in pictures %}
+    <div class="card picture-container ml-2">
+        <img class="card-img" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
+        <div class="card-img-overlay">
+            <a href="{% url 'gallery:single_picture' pk=picture.pk %}">
+                <h4 class="card-title"><b>{{ picture.title }}</b></h4></a> by <a href="{% url 'gallery:author' author=picture.author.username %}"><em>{{ picture.author.first_name }}</em></a>
+        </div>
+    </div>
+{% empty %}
+    <p>No items to display.</p>
+{% endfor %}
+</div>
+{% endblock %}

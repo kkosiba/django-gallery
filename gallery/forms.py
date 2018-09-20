@@ -1,48 +1,10 @@
-from django.contrib.auth.models import User
 from .models import Album, Picture
 
-from django.forms import (
-    ModelForm, Textarea, TextInput, 
-    EmailInput, SelectMultiple, CharField,
-    PasswordInput, ClearableFileInput,
-    )
-
-from django.core.exceptions import ValidationError
+from django import forms
+from django.forms import ModelForm, TextInput
 
 
-class CreatePictureForm(ModelForm):
-    class Meta:
-        model = Picture
-        fields = ('album', 'title', 'picture', 'description', 'tags',)
-        widgets = {
-            'title': TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'required': True,
-                    'placeholder': 'Type your title here..', }, ),
-            'picture': ClearableFileInput(
-                attrs={'multiple': True}, ),
-            'description': Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'required': True,
-                    'placeholder': 'Type your description here..', }, ),
-            'album': SelectMultiple(
-                attrs={
-                    'class': 'form-control',
-                    'required': True, }, ),
-        }
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        if commit:
-            instance.save()
-            self.save_m2m()
-        return instance
-
-
-class AlbumCreateForm(ModelForm):
+class AlbumForm(ModelForm):
     class Meta:
         model = Album
         fields = ('name', )
@@ -55,25 +17,30 @@ class AlbumCreateForm(ModelForm):
         }
 
 
-class SignUpForm(ModelForm):
-    password1 = CharField(label='Password', widget=PasswordInput)
-    password2 = CharField(label='Confirm password', widget=PasswordInput)
+class UploadPictureForm(forms.Form):
+    album = forms.ModelChoiceField(
+        queryset=Album.objects,
+        empty_label='Select album',
+        label='Album',
+        )
+    picture = forms.ImageField(
+        label='Pictures',
+        widget=forms.ClearableFileInput(
+            attrs={'multiple': True},
+            ),
+        required=False,
+        )
 
-    class Meta:
-        model = User
-        fields = ('username', 'password1', 'password2', )
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        qs = User.objects.filter(username=username)
-        if qs.exists():
-            raise ValidationError("Username already in use!")
-        return username
-
-    def clean_password2(self):
-        # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise ValidationError("Passwords don't match!")
-        return password2
+class UpdatePictureForm(forms.Form):
+    album = forms.ModelChoiceField(
+        queryset=Album.objects,
+        empty_label='Select album',
+        label='Album',
+        )
+    picture = forms.ImageField(
+        label='Picture',
+        )
+    description = forms.CharField(
+        label='Description',
+        widget=forms.Textarea(attrs={}))

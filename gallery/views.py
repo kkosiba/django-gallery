@@ -1,16 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.http import Http404
 
-from django.contrib.auth.decorators import login_required
-# from django.utils.decorators import method_decorator
-
-from django.db import transaction
 
 from django.contrib.auth.models import User
-from .models import Profile, Album, Picture
-from .forms import CreatePictureForm, AlbumCreateForm
-from .forms import UserForm, ProfileForm, SignUpForm
+from .models import Album, Picture
+from .forms import UploadPictureForm, UpdatePictureForm, AlbumForm
 
 from django.urls import reverse_lazy
 
@@ -29,56 +23,119 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # complex lookups (for searching)
 from django.db.models import Q
 
-from django.contrib import messages
 # Create your views here.
-    
 
-class SignUp(CreateView):
-    template_name = 'registration/signup.html'
-    form_class = SignUpForm
-    success_url = reverse_lazy('login')
-
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return redirect('/')
-        return super().dispatch(*args, **kwargs)
-
-
-class PictureCreate(LoginRequiredMixin, CreateView):
-    model = Picture
-    form_class = CreatePictureForm
-
-    # to process request.user and all files in the form
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        form.instance.author = self.request.user
-        files = self.request.FILES.getlist('picture')
-        if files:
-            for file in files:
-                obj = self.model.objects.create(
-                    title=form.cleaned_data['title'],
-                    picture=file,
-                    author=form.instance.author,
-                    description=form.cleaned_data['description'])
-        return super().form_valid(form)
+## Albums
+class Albums(ListView):
+    model = Album
+    template_name = 'gallery/index.html'
+    context_object_name = 'albums'
+    paginate_by = 12
 
 
 class AlbumCreate(LoginRequiredMixin, CreateView):
     model = Album
-    form_class = AlbumCreateForm
+    form_class = AlbumForm
 
-    # to process request user in the form
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-
-class AlbumDelete(DeleteView):
-    pass
+    # To conveniently swap 'Update' and 'Create' in album form
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['update'] = False
+        return context
 
 
-class AlbumUpdate(UpdateView):
-    pass
+class AlbumDelete(LoginRequiredMixin, DeleteView):
+    model = Album
+    success_url = reverse_lazy('gallery:albums')
+
+    """
+    To overcome error:
+    'Generic detail view AlbumDelete must be called with either an object pk
+     or a slug in the URLconf.'
+    """
+    def get_object(self):
+        return get_object_or_404(Album, name=self.kwargs.get('album_name'))
+
+
+class AlbumUpdate(LoginRequiredMixin, UpdateView):
+    model = Album
+    form_class = AlbumForm
+
+    def get_object(self):
+        return get_object_or_404(Album, name=self.kwargs.get('album_name'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['update'] = True
+        return context
+
+## Pictures
+class PictureUpload(LoginRequiredMixin, View):
+    form_class = UploadPictureForm
+    template_name = 'gallery/upload_pictures_form.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    # override post method to upload multiple images
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        files = request.FILES.getlist('picture')
+
+        if form.is_valid():
+            for file in files:
+                pic = Picture.objects.create(
+                    album = form.cleaned_data['album'],
+                    picture = file,
+                    description = 'Empty description')
+                pic.save()
+            return redirect('gallery:single_album', 
+                album_name=self.kwargs.get('album_name'))
+
+        return render(request, self.template_name, {'form': form})
+
+
+class PictureUpdate(LoginRequiredMixin, FormView):
+    form_class = UpdatePictureForm
+    template_name = 'gallery/update_picture_form.html'
+    success_url = reverse_lazy('gallery:albums')
+
+    # def get_form(self, form_class):
+    #     """
+    #     Show the form populated with details from database, let user change them.
+    #     """
+    #     if form_class is None: 
+    #         form_class = self.get_form_class()
+    #     picture = get_object_or_404(Picture, pk=self.kwargs['pk'])
+    #     if picture:
+    #         return form_class(instance=picture, **self.get_form_kwargs())
+    #     else:
+    #         return form_class(**self.get_form_kwargs())
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        file = request.FILES.get('picture')
+
+        if form.is_valid():
+            pic = get_object_or_404(Picture, pk=self.kwargs['pk'])
+            pic.album = form.cleaned_data['album']
+            pic.picture = file
+            pic.description = form.cleaned_data['description']
+            pic.tags = form.cleaned_data['tags']
+            pic.save()
+            return redirect('gallery:single_album', 
+                album_name=self.kwargs.get('album_name'))
+
+        return render(request, self.template_name, {'form': form})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['album_name'] = self.kwargs['album_name']
+        pk = self.kwargs['pk']
+        context['pk'] = pk
+        context['picture'] = get_object_or_404(Picture, pk=pk)
+        return context
 
 
 class PictureSearch(ListView):
@@ -94,17 +151,8 @@ class PictureSearch(ListView):
         if search_query:
             results = Picture.objects.filter(
                 Q(album__name__icontains=search_query) |
-                Q(author__first_name__icontains=search_query) |
-                Q(title__icontains=search_query) |
                 Q(description__icontains=search_query)).distinct()
         return results
-
-
-class Albums(ListView):
-    model = Album
-    template_name = 'gallery/index.html'
-    context_object_name = 'albums'
-    paginate_by = 12
 
 
 class PicturesByAlbum(ListView):
@@ -114,7 +162,7 @@ class PicturesByAlbum(ListView):
     ordering = ('-published_date',)
 
     def get_queryset(self):
-        album = self.kwargs.get('album_name', None)
+        album = get_object_or_404(Album, name=self.kwargs['album_name'])
         results = []
         if album:
             results = Picture.objects.filter(album__name=album)
@@ -122,8 +170,7 @@ class PicturesByAlbum(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        album = self.kwargs.get('album_name', None)
-        context['album_name'] = album
+        context['album_name'] = self.kwargs.get('album_name', None)
         # to be implemented
         context['created'] = 0
         return context
@@ -143,54 +190,23 @@ class PicturesByTags(ListView):
             results = Picture.objects.filter(tags__name=tag)
         return results
 
+
 class PictureDetails(DetailView):
     model = Picture
     template_name = 'gallery/single_picture.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs.get('pk', None)
-        # doesn't work
-        context['album_name'] = Picture.objects.filter(pk=pk)[0].album
+        context['album_name'] = self.kwargs.get('album_name', None)
+        context['pk'] = self.kwargs.get('pk', None)
         return context
 
-class PictureDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PictureDelete(LoginRequiredMixin, DeleteView):
     model = Picture
     success_url = reverse_lazy('gallery:albums')
 
-    def test_func(self):
-        """
-        Only let the user delete object if they own the object being deleted
-        """
-        return self.get_object().author.first_name == self.request.user.first_name
-
-
-class PictureUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Picture
-    form_class = CreatePictureForm
-
-    def test_func(self):
-        """
-        Only let the user update object if they own the object being updated
-
-        """
-        return self.get_object().author.first_name == self.request.user.first_name
-
-
-@login_required
-@transaction.atomic
-def update_profile(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('profile')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'profiles/profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['album_name'] = self.kwargs.get('album_name', None)
+        context['pk'] = self.kwargs.get('pk', None)
+        return context

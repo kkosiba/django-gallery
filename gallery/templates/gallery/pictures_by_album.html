@@ -2,41 +2,50 @@
 
 {% block title %} Album: {{ album_name }} {% endblock %}
 
-{% block subpage %} {{ album_name }} {% endblock %}
+{% block subpage %} 
+<a href="{% url 'gallery:single_album' album_name=album_name %}" class="nav-link">
+    Album: {{ album_name }} <span class="sr-only">(current)</span> 
+</a> 
+{% endblock %}
+
+{% block user_panel %}
+    {% if user.is_authenticated %}
+        <div class="my-3">
+            <ul class="list-unstyled text-center">
+                <li class="d-inline-block"><a href="{% url 'gallery:update_album' album_name=album_name %}" class="pl-3"><b>Update Album &nbsp;</b><i class="fas fa-edit"></i></a></li>
+                <li class="d-inline-block"><a href="{% url 'gallery:delete_album' album_name=album_name %}" class="pl-3"><b>Delete Album &nbsp;</b><i class="fas fa-trash-alt"></i></a></li>
+                <li class="d-inline-block"><a href="{% url 'gallery:upload_pictures' album_name=album_name %}" class="pl-3"><b>Upload Pictures &nbsp;</b><i class="fas fa-file-upload"></i></a></li>
+            </ul>
+        </div>
+    {% else %}
+        <!-- add some space -->
+        <div class="my-3">&nbsp;</div>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-<h3 class="text-white"> {{ album_name }} </h3>
-<p class="text-white">{{ created|date:"F j, Y" }}</p>
-<hr>
-{% if user.is_authenticated %}
-<a href="{# url 'gallery:delete_album' album_name= #}" class="navbar-text pl-3"><b>Delete Album</b></a>
+
+{% if pictures %}
+<ul class="photo-grid list-unstyled mb-4">
+    {% for picture in pictures %}
+        <li>
+            <div class="card rounded-0">
+                <a href="{% url 'gallery:single_picture' album_name=picture.album.name pk=picture.pk %}" data-caption="{{ picture.description }}">
+                    <img class="card-img-top rounded-0" src="{{ picture.picture.url }}">
+                </a>
+                {% if user.is_authenticated %}
+                <div class="card-body">
+                    <strong>Actions:&nbsp;</strong>
+                    <a href="{% url 'gallery:update_picture' album_name=album_name pk=picture.pk %}" data-toggle="tooltip" title="Update picture"><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'gallery:delete_picture' album_name=album_name pk=picture.pk %}" data-toggle="tooltip" title="Delete picture"><i class="fas fa-trash-alt"></i></a>
+                </div>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>Empty album.</p>
 {% endif %}
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
-  <div class="carousel-inner">
-    {% for picture in pictures %}
-    {% if forloop.counter == 1 %}
-        <div class="carousel-item active">
-    {% else %}
-        <div class="carousel-item">
-    {% endif %}
-            <figure class="cap-bot">
-                <img class="d-block w-100" src="{{ picture.picture.url }}" alt="{{ picture.title }}">
-                <figcaption>
-                    <h5>{{ picture.title }}</h5>
-                    <p>{{ picture.description }}</p>
-                </figcaption>
-            </figure>
-    {% endfor %}
-        </div>
-    
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span><i class="fas fa-angle-left fa-5x text-dark" aria-hidden="true"></i></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span><i class="fas fa-angle-right fa-5x text-dark" aria-hidden="true"></i></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
 {% endblock %}

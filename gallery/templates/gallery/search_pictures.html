@@ -1,32 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %} Search results for '{{request.GET.q}}' {% endblock %}
+{% block title %} Search results for '{{ request.GET.q }}' {% endblock %}
+
+{% block subpage %} 
+	{% if request.GET.q %}
+		Search results for "{{ request.GET.q }}"
+	{% endif %}
+{% endblock %}
+
 
 {% block content %}
-<div class="card p-4" style="margin: auto;">
+<div class="submission-form">
 {% if request.GET.q %}
-	<h3> Search results for '{{ request.GET.q }}':</h3>
-	<hr>
-	<div>
-		{% for picture in pictures %}
-		<a href="{% url 'gallery:single_picture' pk=picture.pk %}">
-			<img class="card-img-top" src="{{ picture.picture.url }}" alt="{{ picture.title }}" style="height: 12rem;">
-		</a>
-		<div class="card-body">
-			<h5 class="card-title">{{ picture.title }}</h5>
-			<p class="card-text">
-				{{ picture.description }}
-			</p>
-			<p class="card-text">
-				<b>Posted:</b>&nbsp; {{ picture.published_date|date:"F j, Y" }}
-				<br>	
-				<b>Author:</b>&nbsp; <a href="{% url 'gallery:author' author=picture.author.username %}">{{ picture.author.first_name }}</a>
-			</p>
+	{% for picture in pictures %}
+	<div class="card picture-container ml-2">
+		<img class="card-img" src="{{ picture.picture.url }}">
+		<div class="card-img-overlay">
+			<a href="{% url 'gallery:single_picture' album_name=picture.album.name pk=picture.pk %}">
 		</div>
-		{% empty %}
-			<p>No pictures matching search query.</p>
-		{% endfor %}
 	</div>
+	{% empty %}
+		<p class="my-4">No pictures matching search query.</p>
+	{% endfor %}
 {% else %}
 	<h3>Search</h3>
 	<form method="GET" action="{% url 'gallery:search' %}">

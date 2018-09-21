@@ -5,7 +5,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Django Gallery">
+    <meta name="author" content="Author">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- FontAwesome CSS -->
@@ -26,71 +28,58 @@
       js = d.createElement(s); js.id = id;
       js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.1';
       fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
+  }(document, 'script', 'facebook-jssdk'));
+</script>
 
-    <header>
-        
-        <!--Navbar-->
-        <nav class="navbar navbar-expand-lg">
-            <a href="{% url 'gallery:albums' %}" class="navbar-brand">
-                <b>Django Gallery</b>
-            </a>
-            <div class="navbar-brand">
-                    <span class="vertical-line"></span>
-                    <span class="faded">{% block subpage %} {% endblock %}</span>
-            </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
+<header>
+    <div class="bg-dark">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="{% url 'gallery:albums' %}"><i class="fas fa-camera"></i> Django Gallery</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'gallery:search' %}">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                        {% block subpage %} {% endblock %}
+                        </li>
+                    </ul>
+                    <form class="form-inline" method="GET" action="{% url 'gallery:search' %}">
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" placeholder="Search..." name="q">
                             <div class="input-group-append">
-                                <button class="btn btn-dark active" type="button">
+                                <button class="btn btn-light active" type="button">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
                         </div>
                     </form>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        {% if user.is_authenticated %}
-                        <span class="nav-link">
-                            Hello, <b>{{ user.username.capitalize }}</b> 
-                            <span class="vertical-line">
-                            <a href="{% url 'logout' %}?next={{ request.path | urlencode }}">&nbsp;Sign Out <i class="fas fa-sign-out-alt"></i></a>
-                            </span>
-                        </span>
-                        
-                        {% else %}
-                        <a class="nav-link" href="{% url 'login' %}?next={{ request.path | urlencode }}">Sign In <i class="fas fa-sign-in-alt"></i></a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header> 
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
 
+<div class="container">
     {% block user_panel %} {% endblock %}
 
     {% block content %} {% endblock %}
-    
-    <footer>
-        <p class="text-dark">
-            <a href="/feed/">Get notified about new albums by subscribing.</a>
-        </p>
+</div>
+<footer>
+    <p class="text-dark">
+        <a href="{% url 'feed' %}">Get notified about new albums by subscribing.</a>
+    </p>
 
-        <p class="m-0 text-center text-dark">
-            Copyright &copy; {% now "Y" %} by Author<br>
-            <a href="#">Back to top</a>
-        </p>
-    </footer>
+    <p class="m-0 text-center text-dark">
+        Copyright &copy; {% now "Y" %} by Author<br>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
 
-    <!-- Scripts -->
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- Scripts -->
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>

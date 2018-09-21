@@ -3,9 +3,10 @@ body {
     font-family: "Open Sans", sans-serif;
 }
 
-.photo-grid li img {
-    margin-top: 10px;
+.photo-grid li .card {
+    margin-bottom: 10px;
     width: 100%;
+    display: inline-block;
 }
 
 @media(min-width:576px){
@@ -58,33 +59,6 @@ footer {
 
 footer p {
     color: #f9f9f9;
-}
-
-.errorlist {
-    list-style-type: none;
-}
-
-/* IMAGE OVERLAY STYLES */
-
-.picture-container {
-    width: 20rem;
-}
-
-.picture-container:hover .card-img {
-    opacity: 0.3;
-}
-
-.picture-container:hover .card-img-overlay {
-    opacity: 1.0;
-}
-
-.vertical-line {
-    border-left: 4px solid;
-    margin: 0 14px 0 0;
-}
-
-.faded {
-    color: #686b70;
 }
 
 /* FORMS */

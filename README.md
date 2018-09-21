@@ -1,6 +1,10 @@
 # django-gallery
 Responsive Bootstrap gallery with Django backend
 
+ ![blog](https://github.com/ncunx/django-gallery/blob/master/pics/sample.png)
+
+For more pictures, see `pics` directory.
+
 Features
 --------
 

@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block subpage %}
-    Update Picture
+    <a href="{% url 'gallery:update_picture' album_name=album_name pk=picture.pk %}" class="nav-link">
+    Update Picture <span class="sr-only">(current)</span> 
+	</a> 
 {% endblock %}
 
 {% block user_panel %} {% endblock %}

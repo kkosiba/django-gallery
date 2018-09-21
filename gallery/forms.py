@@ -44,3 +44,4 @@ class UpdatePictureForm(forms.Form):
     description = forms.CharField(
         label='Description',
         widget=forms.Textarea(attrs={}))
+    tags = forms.CharField(label='Tags')

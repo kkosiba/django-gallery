@@ -2,34 +2,33 @@
 
 {% block title %} Sign In {% endblock %}
 
-{% block subpage %} Sign In {% endblock %}
-
 {% block content %}
-<div class="submission-form">
-    <h3 class="my-4">Sign In</h3>
+<div class="p-4 text-center m-auto w-75">
+    <h3>Sign In </h3>
+    <hr>
     {% if form.errors %}
-    <small class="p-1 mb-3 text-center text-white bg-danger">
-        Your username and password didn't match. Please try again.
-    </small>
+        <small class="p-1 mb-3 text-center text-white bg-danger">
+            Your username and password didn't match. Please try again.
+        </small>
     {% endif %}
 
     {% if next %}
         {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed, 
+            <p>Your account doesn't have access to this page. To proceed,
             please login with an account that has access.</p>
         {% endif %}
     {% endif %}
 
-    <form method="post" action="">
+    <form method="post">
         {% csrf_token %}
         <div class="form-group row">
-            <label class="col-sm-4"><b>Username:</b></label>
+            <label class="col-sm-4 font-weight-bold">{{ form.username.label_tag }}</label>
             <div class="col-sm-8">
                 {{ form.username }}
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-sm-4"><b>Password:</b></label>
+            <label class="col-sm-4 font-weight-bold">{{ form.password.label_tag }}</label>
             <div class="col-sm-8">
                 {{ form.password }}
             </div>
@@ -37,8 +36,12 @@
         <button class="btn btn-primary" type="Login">Sign In <i class="fas fa-sign-in-alt"></i></button>
     </form>
     <div class="text-center mt-4">
-        <a href="{% url 'password_reset' %}">Forgot your password?</a>
+        <a href="{% url 'accounts:password_reset' %}">Forgot your password?</a>
+        <br>
+        <a href="{% url 'accounts:signup' %}">Register new account</a>
     </div>
 </div>
-
 {% endblock %}
+
+<!-- Clear footer -->
+{% block footer-content %} {% endblock %} 

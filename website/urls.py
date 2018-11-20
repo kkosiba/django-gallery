@@ -26,7 +26,8 @@ from gallery.feeds import AlbumFeed
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    # path('accounts/', include('django.contrib.auth.urls')),
 
     path('feed/', AlbumFeed(), name='feed'),
     path('', include('gallery.urls')),

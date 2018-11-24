@@ -56,6 +56,19 @@
                             </div>
                         </div>
                     </form>
+                    <ul class="navbar-nav ml-4">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            Logged as: <b>{{ user.username.capitalize }}</b> <i class="fas fa-user"></i>
+                            |
+                            <a href="{% url 'accounts:logout' %}?next={{ request.path | urlencode }}" class="text-light">Logout <i class="fas fa-sign-out-alt"></i></a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:login' %}?next={{ request.path | urlencode }}" class="text-light">Sign In <i class="fas fa-sign-in-alt"></i></a>
+                        </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </nav>
         </div>

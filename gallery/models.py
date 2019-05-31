@@ -1,12 +1,9 @@
+import random
 from django.db import models
-
 from django.utils import timezone
 from django.urls import reverse
-
-# tags
 from taggit.managers import TaggableManager
 
-import random
 
 # Create your models here.
 class Album(models.Model):
@@ -14,14 +11,14 @@ class Album(models.Model):
     creation_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        verbose_name_plural = 'Albums'
-        ordering = ('-creation_date', )
+        verbose_name_plural = "Albums"
+        ordering = ("-creation_date",)
 
     def item_count(self):
         n = Picture.objects.filter(album__name=self.name).count()
-        if n>1:
+        if n > 1:
             return f"{n} items."
-        elif n==1:
+        elif n == 1:
             return "1 item."
         return "Empty album."
 
@@ -35,13 +32,13 @@ class Album(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('gallery:single_album', kwargs={'album_name': self.name})
+        return reverse("gallery:single_album", kwargs={"album_name": self.name})
 
 
 class Picture(models.Model):
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='pictures')
-    picture = models.ImageField(upload_to='media', default='media/None/no-img.jpg')
-    description = models.CharField(max_length=500, default='Empty')
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="pictures")
+    picture = models.ImageField(upload_to="media", default="media/None/no-img.jpg")
+    description = models.CharField(max_length=500, default="Empty")
 
     # tags mechanism
     tags = TaggableManager(blank=True)
@@ -50,6 +47,7 @@ class Picture(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('gallery:single_picture', 
-            kwargs={'album_name': self.album.name,
-                    'pk': self.pk})
+        return reverse(
+            "gallery:single_picture",
+            kwargs={"album_name": self.album.name, "pk": self.pk},
+        )

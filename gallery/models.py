@@ -1,4 +1,7 @@
 import random
+import shutil # for filesystem cleanup
+from os.path import isdir # to check if directory exists
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -34,10 +37,23 @@ class Album(models.Model):
     def get_absolute_url(self):
         return reverse("gallery:single_album", kwargs={"album_name": self.name})
 
+    def delete(self, *args, **kwargs):
+        """Custom delete method to remove album directory once the album no longer exists in db"""
+        
+        location = settings.MEDIA_ROOT + "/" + self.name # location of album in the filesystem
+        if isdir(location):
+            shutil.rmtree(location)
+        super().delete(*args, **kwargs)
+
+
+def album_name(instance, filename):
+    """Callable for upload_to argument in picture attribute below"""
+    return f"{instance.album.name}/{filename}"
+
 
 class Picture(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="pictures")
-    picture = models.ImageField(upload_to="media", default="media/None/no-img.jpg")
+    picture = models.ImageField(upload_to=album_name, default="blank/no_img.png")
     description = models.CharField(max_length=500, default="Empty")
 
     # tags mechanism
@@ -51,3 +67,10 @@ class Picture(models.Model):
             "gallery:single_picture",
             kwargs={"album_name": self.album.name, "pk": self.pk},
         )
+
+    def delete(self, *args, **kwargs):
+        """Custom delete method to remove pictures references not only from db, 
+        but also from the filesystem"""
+
+        self.picture.delete()
+        super().delete(*args, **kwargs)

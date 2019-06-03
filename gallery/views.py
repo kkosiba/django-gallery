@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.db.models import Q # complex lookups (for searching)
+from django.db.models import Q  # complex lookups (for searching)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -71,17 +71,14 @@ class PictureUpload(LoginRequiredMixin, View):
 
     # override post method to upload multiple images
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        files = request.FILES.getlist("picture")
-
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            for file in files:
-                pic = Picture.objects.create(
+            for file in form.files.getlist("picture"):
+                Picture(
                     album=form.cleaned_data["album"],
                     picture=file,
                     description="Empty description",
-                )
-                pic.save()
+                ).save()
             return redirect(
                 "gallery:single_album", album_name=self.kwargs.get("album_name")
             )
